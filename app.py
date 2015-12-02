@@ -98,8 +98,9 @@ class MyFrame(Frame):
 	def buildGcode(self, fname):
 		print(fname)
 		self.code.delete(0.0, END)
-		self.prepareTrayLabel.text = ''
-		self.generateGcodeLabel.text = ''
+		self.prepareTrayLabel['text'] = 'prepareTrayProgress: %%%d'%(0)
+		self.generateGcodeLabel['text'] = 'generateGcodeProgress: %%%d'%(0)
+		self.update_idletasks()
 
 		file_id = uploadFile(fname)
 		uuid = importMesh(file_id)
@@ -117,7 +118,7 @@ class MyFrame(Frame):
 		uuid = prepareTray(tray_id)
 		for i in range(60):
 			progress = prepareTrayProgress(uuid)
-			self.prepareTrayLabel.text = str(progress)
+			self.prepareTrayLabel['text'] = 'prepareTrayProgress: %%%d'%(progress*100)
 			if progress == 1:
 				break
 			else:
@@ -127,7 +128,7 @@ class MyFrame(Frame):
 
 		for i in range(60):
 			progress = generateGcodeProgress(uuid)
-			self.generateGcodeLabel.text = str(progress)
+			self.generateGcodeLabel['text'] = 'generateGcodeProgress: %%%d'%(progress*100)
 			if progress == 1:
 				break
 			else:
