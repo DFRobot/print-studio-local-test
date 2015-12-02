@@ -12,7 +12,7 @@ class MyFrame(Frame):
 		# threading.Thread.__init__(self)
 
 		self.master.title("DF Print Studio Test")
-		# self.master.geometry('600x400')
+		# self.master.geometry('400x300')
 		self.master.rowconfigure(0, weight=1)
 		self.master.columnconfigure(0, weight=1)
 		# self.master.configure(bg='blue')
@@ -29,7 +29,7 @@ class MyFrame(Frame):
 		self.buttonFrame.grid(row=0,column=0, sticky=W) 
 		self.loadButton = Button(self.buttonFrame, text="open STL file", command=self.load_file)
 		self.loadButton.pack(side=LEFT, expand=YES)
-		self.loadButton.state = 'DISABLED'
+		# self.loadButton.state = 'DISABLED'
 
 		# self.buildButton = Button(self.buttonFrame, text="build", command=self.build_gcode)
 		# self.buildButton.pack(side=LEFT, expand=YES, fill=BOTH)
@@ -38,16 +38,16 @@ class MyFrame(Frame):
 		self.saveButton.pack(side=LEFT, expand=YES)
 
 		self.printer_id_e = StringVar()
-		self.printer_id_label = Label (self.inputFrame, width=11, text = "printer-type-id:", anchor = W)
+		self.printer_id_label = Label (self.inputFrame, width=15, text = "printer-type-id:", anchor = W)
 		self.printer_id_label.grid(row=1, column=0, sticky=W)
-		self.printer_id = Entry(self.inputFrame, width=34, textvariable=self.printer_id_e)
+		self.printer_id = Entry(self.inputFrame, width=40, textvariable=self.printer_id_e)
 		self.printer_id.grid(row=2, column=0, rowspan=1, columnspan=3, sticky=W)
 		self.printer_id_e.set('4A0F7523-071B-4F1E-A527-9DA49AECB807')
 
 		self.profile_e = StringVar()
 		self.profile_label = Label (self.inputFrame, width=11, text = "profile-id:", anchor=W)
 		self.profile_label.grid(row=3, column=0, sticky=W)
-		self.profile = Entry(self.inputFrame, width=34, textvariable=self.profile_e)
+		self.profile = Entry(self.inputFrame, width=40, textvariable=self.profile_e)
 		self.profile.grid(row=4, column=0, rowspan=1, columnspan=3, sticky=W)
 		self.profile_e.set('EF6D5047-0D09-4F6A-AC06-9EF09638D2C9')
 
@@ -80,9 +80,11 @@ class MyFrame(Frame):
 		self.frameText.pack(side=LEFT, expand=YES, fill=BOTH, padx=3, pady=3)
 		self.scrollbar = Scrollbar(self.frameText)
 		self.scrollbar.pack(side=RIGHT, fill=BOTH)
-		self.code = Text(self.frameText, yscrollcommand = self.scrollbar.set)
+		self.code = Text(self.frameText, yscrollcommand = self.scrollbar.set, width=45)
 		self.code.pack(side=LEFT, expand=YES, fill=BOTH, padx=3, pady=3)
 		self.scrollbar.config(command = self.code.yview)
+		self.master.update()
+		self.master.deiconify()
 
 		
 
