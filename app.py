@@ -80,7 +80,7 @@ class MyFrame(Frame):
 		self.frameText.pack(side=LEFT, expand=YES, fill=BOTH, padx=3, pady=3)
 		self.scrollbar = Scrollbar(self.frameText)
 		self.scrollbar.pack(side=RIGHT, fill=BOTH)
-		self.code = Text(self.frameText, yscrollcommand = self.scrollbar.set, xscrollcommand = self.scrollbar.set)
+		self.code = Text(self.frameText, yscrollcommand = self.scrollbar.set)
 		self.code.pack(side=LEFT, expand=YES, fill=BOTH, padx=3, pady=3)
 		self.scrollbar.config(command = self.code.yview)
 
