@@ -20,7 +20,7 @@ def resJsonPrint(r):
 
 
 def uploadFile(fileName):
-	url = 'http://localhost:'+str(port)+'/files/upload'
+	url = host+'/files/upload'
 	files = {'file':open (fileName, 'rb')}
 	r = requests.post (url, files = files)
 	print ("status code : " + str(r.status_code))
@@ -33,7 +33,7 @@ def uploadFile(fileName):
 ########################################### ###########################################
 
 def importMesh (file_id):
-	url = 'http://localhost:'+str(port)+'/geom/meshes/import'
+	url = host+'/geom/meshes/import'
 	args = {'file_id':file_id, 'name':'hello'}
 	print ('args = ' + str(args))
 	r = requests.post(url, data = args)
@@ -45,7 +45,7 @@ def importMesh (file_id):
 ########################################### ###########################################
 
 def importMeshResponse(uuid):
-	url = 'http://localhost:'+str(port)+'/print/tasks/'+uuid
+	url = host+'/print/tasks/'+uuid
 	r = requests.get(url)
 	print ("status code : " + str(r.status_code))
 	print('progress : ' + str(r.json()['progress']))
@@ -67,7 +67,7 @@ def importMeshResponse(uuid):
 ########################################### ###########################################
 
 def transformMesh(uuid, form):
-	url = 'http://localhost:'+str(port)+'/geom/meshes/transform'
+	url = host+'/geom/meshes/transform'
 	args = {'id': uuid, 'transform': form }
 	print('args : ' + str(args))
 	headers = {'content-type': 'application/json'}
@@ -79,7 +79,7 @@ def transformMesh(uuid, form):
 ########################################### ###########################################
 
 def analyzeMesh(uuid):
-	url = 'http://localhost:'+str(port)+'/geom/meshes/analyze'
+	url = host+'/geom/meshes/analyze'
 	args = {'id': uuid }
 	print ('args = ' + str(args))
 	r = requests.post(url, data = args)
@@ -111,7 +111,7 @@ def analyzeMesh(uuid):
 ########################################### ###########################################
 
 def reqairMesh(uuid):
-	url = 'http://localhost:'+str(port)+'/geom/meshes/repair'
+	url = host+'/geom/meshes/repair'
 	args = {'id': uuid, 'all': True}
 	print ('args = ' + str(args))
 	r = requests.post(url, params = args)
@@ -139,7 +139,7 @@ def reqairMesh(uuid):
 ########################################### ###########################################
 
 def createTray(printer_id, profile_id, mesh_ids):
-	url = 'http://localhost:'+str(port)+'/print/trays'
+	url = host+'/print/trays'
 	args = {
 			#"printer_type_id": "4A0F7523-071B-4F1E-A527-9DA49AECB807", 
 			"printer_type_id": printer_id, 
@@ -156,7 +156,7 @@ def createTray(printer_id, profile_id, mesh_ids):
 ########################################### ###########################################
 
 def createTrayResponse(uuid):
-	url = 'http://localhost:'+str(port)+'/print/tasks/' + uuid
+	url = host+'/print/tasks/' + uuid
 	r = requests.get(url)
 	print ("status code : " + str(r.status_code))
 	tryTime = 1
@@ -180,7 +180,7 @@ def createTrayResponse(uuid):
 ########################################### ###########################################
 
 def prepareTray(uuid):
-	url = 'http://localhost:'+str(port)+'/print/trays/prepare'
+	url = host+'/print/trays/prepare'
 	args = {'id': uuid, 'generate_visual': True}
 	headers = {'content-type': 'application/json'}
 	print ('args = ' + str(args))
@@ -195,7 +195,7 @@ def prepareTray(uuid):
 
 ########################################### ###########################################
 def prepareTrayProgress(uuid):
-	url = 'http://localhost:'+str(port)+'/print/tasks/' + uuid
+	url = host+'/print/tasks/' + uuid
 	r = requests.get(url)
 	if 'progress' in r.json():
 		progress = r.json()['progress']
@@ -205,7 +205,7 @@ def prepareTrayProgress(uuid):
 		return 0
 ########################################### ###########################################
 def prepareTrayResponse (uuid):
-	url = 'http://localhost:'+str(port)+'/print/tasks/' + uuid
+	url = host+'/print/tasks/' + uuid
 	r = requests.get(url)
 	resJsonPrint(r)
 	tryTime = 1
@@ -228,7 +228,7 @@ def prepareTrayResponse (uuid):
 # generate Gcode file
 
 def generateGcode(uuid):
-	url = 'http://localhost:'+str(port)+'/print/trays/generate-printable'
+	url = host+'/print/trays/generate-printable'
 	args = {'id':uuid}
 	print ('args = ' + str(args))
 	r = requests.post(url, data = args)
@@ -240,7 +240,7 @@ def generateGcode(uuid):
 
 ########################################### ###########################################
 def generateGcodeProgress(uuid):
-	url = 'http://localhost:'+str(port)+'/print/tasks/' + uuid
+	url = host+'/print/tasks/' + uuid
 	r = requests.get(url)
 	if 'progress' in r.json():
 		progress = r.json()['progress']
@@ -255,7 +255,7 @@ def generateGcodeProgress(uuid):
 ########################################### ###########################################
 
 def generateGcodeResponse(uuid):
-	url = 'http://localhost:'+str(port)+'/print/tasks/' + uuid
+	url = host+'/print/tasks/' + uuid
 	r = requests.get(url)
 	resJsonPrint(r)
 	tryTime = 1
@@ -277,7 +277,7 @@ def generateGcodeResponse(uuid):
 ########################################### ###########################################
 
 def downloadGcode(file_id, path):
-	url = 'http://localhost:'+str(port)+'/files/' + file_id
+	url = host+'/files/' + file_id
 	r = requests.get(url) 
 	print('url : ' + r.url)
 	# print('text : ' + r.text)
@@ -292,7 +292,7 @@ def downloadGcode(file_id, path):
 
 ######################################### end ##########################################
 def getGcode(file_id):
-	url = 'http://localhost:'+str(port)+'/files/' + file_id
+	url = host+'/files/' + file_id
 	r = requests.get(url) 
 	print('url : ' + r.url)
 	if r.status_code == 200:
