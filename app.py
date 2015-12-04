@@ -9,7 +9,6 @@ from printClient import *
 class MyFrame(Frame):
 	def __init__(self):
 		Frame.__init__(self)
-		# threading.Thread.__init__(self)
 
 		self.master.title("DF Print Studio Test")
 		# self.master.geometry('400x300')
