@@ -24,6 +24,7 @@ mesh_id = uuid
 print('--------------------------------------------------------------------------------')
 print('Analyze and Repair Mesh:')
 uuid = analyzeMesh(mesh_id)
+print('uuid : '+uuid)
 if uuid == '':
 	print('analyze mesh finished with no problem, do not need repair')
 elif uuid != 'timeout':
@@ -31,10 +32,10 @@ elif uuid != 'timeout':
 
 print('--------------------------------------------------------------------------------')
 print('createTray:')
-print('uuid : '+uuid)
 printer_id = '4A0F7523-071B-4F1E-A527-9DA49AECB807'
 profile_id = 'EF6D5047-0D09-4F6A-AC06-9EF09638D2C9'
 uuid = createTray(printer_id=printer_id, profile_id=profile_id, mesh_ids=[mesh_id])
+print('uuid : '+uuid)
 
 print('--------------------------------------------------------------------------------')
 print('createTrayResponse:')
