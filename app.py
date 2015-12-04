@@ -104,42 +104,87 @@ class MyFrame(Frame):
 		self.generateGcodeLabel['text'] = 'generateGcode: %d%%'%(0)
 		self.update_idletasks()
 
+		print('--------------------------------------------------------------------------------')
+		print('uploadFile:')
 		file_id = uploadFile(fname)
+		print ("file_id = " + file_id)
 		# uploadFile ok
+
+		print('--------------------------------------------------------------------------------')
+		print('importMesh:')
 		uuid = importMesh(file_id)
+		print('uuid = ' + uuid)
+
+		print('--------------------------------------------------------------------------------')
+		print('importMeshResponse:')
 		uuid = importMeshResponse(uuid)
+		print('uuid = ' + uuid)
 		# importMesh ok
+
+		print('--------------------------------------------------------------------------------')
+		print('transformMesh:')
 		uuid = transformMesh(uuid, self.getTransform())
+		print('uuid = ' + uuid)
 		# transformMesh ok
 		mesh_id = uuid
+
+		print('--------------------------------------------------------------------------------')
+		print('Analyze and Repair Mesh:')
 		uuid = analyzeMesh(mesh_id)
 		# analyzeMesh ok with problem or no problem
 		if uuid == '':
 			print('analyze mesh finished with no problem')
 		elif uuid != 'timeout':
 			uuid = reqairMesh(uuid)
+
+		print('--------------------------------------------------------------------------------')
+		print('createTray:')
 		uuid = createTray(self.printer_id_e.get(), self.profile_e.get(), [mesh_id])
+		print('uuid = ' + uuid)
+
+		print('--------------------------------------------------------------------------------')
+		print('createTrayResponse:')
 		uuid = createTrayResponse(uuid)
+		print('tray_id = ' + uuid)
 		# createTray ok
 		tray_id = uuid
+
+		print('--------------------------------------------------------------------------------')
+		print('prepareTray:')
 		uuid = prepareTray(tray_id)
-		for i in range(60):
+		print('uuid : '+uuid)
+
+		print('--------------------------------------------------------------------------------')
+		print('prepareTrayResponse:')
+		for i in range(600):
 			progress = prepareTrayProgress(uuid)
 			self.prepareTrayLabel['text'] = 'prepareTray: %d%%'%(progress*100)
 			if progress == 1:
 				break
 			else:
-				time.sleep(1)
+				time.sleep(2)
 		uuid = prepareTrayResponse(uuid)
+		print('uuid : '+uuid)
+
+		print('--------------------------------------------------------------------------------')
+		print('generateGcode:')
 		uuid = generateGcode(uuid)
-		for i in range(60):
+		print('uuid : '+uuid)
+
+		print('--------------------------------------------------------------------------------')
+		print('generateGcodeResponse:')
+		for i in range(600):
 			progress = generateGcodeProgress(uuid)
 			self.generateGcodeLabel['text'] = 'generateGcode: %d%%'%(progress*100)
 			if progress == 1:
 				break
 			else:
-				time.sleep(1)
+				time.sleep(2)
 		uuid = generateGcodeResponse(uuid)
+		print('uuid : '+uuid)
+
+		print('--------------------------------------------------------------------------------')
+		print('downloadGcode:')
 		# downloadGcode(uuid, "/Users/lisper/test.gcode")
 		self.gcode = getGcode(uuid)
 		self.code.insert(END, self.gcode)
