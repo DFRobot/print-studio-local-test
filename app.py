@@ -58,10 +58,10 @@ class MyFrame(Frame):
 		self.form = Frame (self.inputFrame, width = 100, height=100)
 		self.form.grid(row=6, column=0, rowspan=1, columnspan=1, sticky=W)
 
-		self.prepareTrayLabel= Label(self.inputFrame, text="prepareTrayProgress")
+		self.prepareTrayLabel= Label(self.inputFrame, text="prepareTray: 0%")
 		self.prepareTrayLabel.grid(row=7, column=0, sticky=W)
 
-		self.generateGcodeLabel = Label(self.inputFrame, text="generateGcodeProgress")
+		self.generateGcodeLabel = Label(self.inputFrame, text="generateGcode: 0%")
 		self.generateGcodeLabel.grid(row=8, column=0, sticky=W)
 
 		self.entry = []
@@ -100,37 +100,41 @@ class MyFrame(Frame):
 	def buildGcode(self, fname):
 		print(fname)
 		self.code.delete(0.0, END)
-		self.prepareTrayLabel['text'] = 'prepareTrayProgress: %%%d'%(0)
-		self.generateGcodeLabel['text'] = 'generateGcodeProgress: %%%d'%(0)
+		self.prepareTrayLabel['text'] = 'prepareTray: %d%%'%(0)
+		self.generateGcodeLabel['text'] = 'generateGcode: %d%%'%(0)
 		self.update_idletasks()
 
 		file_id = uploadFile(fname)
+		# uploadFile ok
 		uuid = importMesh(file_id)
 		uuid = importMeshResponse(uuid)
+		# importMesh ok
 		uuid = transformMesh(uuid, self.getTransform())
+		# transformMesh ok
 		mesh_id = uuid
 		uuid = analyzeMesh(mesh_id)
+		# analyzeMesh ok with problem or no problem
 		if uuid == '':
 			print('analyze mesh finished with no problem')
 		elif uuid != 'timeout':
 			uuid = reqairMesh(uuid)
 		uuid = createTray(self.printer_id_e.get(), self.profile_e.get(), [mesh_id])
 		uuid = createTrayResponse(uuid)
+		# createTray ok
 		tray_id = uuid
 		uuid = prepareTray(tray_id)
 		for i in range(60):
 			progress = prepareTrayProgress(uuid)
-			self.prepareTrayLabel['text'] = 'prepareTrayProgress: %%%d'%(progress*100)
+			self.prepareTrayLabel['text'] = 'prepareTray: %d%%'%(progress*100)
 			if progress == 1:
 				break
 			else:
 				time.sleep(1)
 		uuid = prepareTrayResponse(uuid)
 		uuid = generateGcode(uuid)
-
 		for i in range(60):
 			progress = generateGcodeProgress(uuid)
-			self.generateGcodeLabel['text'] = 'generateGcodeProgress: %%%d'%(progress*100)
+			self.generateGcodeLabel['text'] = 'generateGcode: %d%%'%(progress*100)
 			if progress == 1:
 				break
 			else:

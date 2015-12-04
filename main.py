@@ -2,7 +2,7 @@ from printClient import *
 
 print('--------------------------------------------------------------------------------')
 print('uploadFile:')
-file_id = uploadFile('/Users/lisper/hello.stl')
+file_id = uploadFile('./box.stl')
 print ("file_id = " + file_id)
 
 print('--------------------------------------------------------------------------------')
@@ -64,6 +64,6 @@ print('uuid : '+uuid)
 
 print('--------------------------------------------------------------------------------')
 print('downloadGcode:')
-downloadGcode(uuid, "/Users/lisper/test.gcode")
+downloadGcode(uuid, "./box.gcode")
  
 

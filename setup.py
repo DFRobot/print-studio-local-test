@@ -9,11 +9,17 @@ from setuptools import setup
 
 APP = ['app.py']
 DATA_FILES = []
-OPTIONS = {'argv_emulation': True}
+OPTIONS = {
+	'argv_emulation': True,
+	'iconfile':'app.icns'
+}
 
 setup(
     app=APP,
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
+    version='0.0.1',
+    description='DFRobot Print Studio local test',
+    name='DF-Print-Studio-Test'
 )
