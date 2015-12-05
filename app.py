@@ -1,4 +1,5 @@
 import threading
+from time import sleep
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import asksaveasfilename
@@ -89,7 +90,7 @@ class MyFrame(Frame):
 
 	def load_file(self):
 		fname = askopenfilename()
-		time.sleep (3)
+		sleep (3)
 		if fname:
 			thread1 = threading.Thread(target = self.buildGcode, args=(fname,))
 			thread1.setDaemon(True)
@@ -161,7 +162,7 @@ class MyFrame(Frame):
 			if progress == 1:
 				break
 			else:
-				time.sleep(2)
+				sleep(2)
 		uuid = prepareTrayResponse(uuid)
 		print('uuid : '+uuid)
 
@@ -178,7 +179,7 @@ class MyFrame(Frame):
 			if progress == 1:
 				break
 			else:
-				time.sleep(2)
+				sleep(2)
 		uuid = generateGcodeResponse(uuid)
 		print('uuid : '+uuid)
 
@@ -186,6 +187,7 @@ class MyFrame(Frame):
 		print('downloadGcode:')
 		# downloadGcode(uuid, "/Users/lisper/test.gcode")
 		self.gcode = getGcode(uuid)
+		print('================================================================================')
 		self.code.insert(END, self.gcode)
 		return
 
