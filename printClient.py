@@ -1,6 +1,6 @@
 import requests
 import json
-import time
+from time import sleep
 
 port = 9997
 
@@ -11,13 +11,35 @@ host = 'http://localhost:' + str(port)
 # nice print response json data
 def resJsonPrint(r):
 	if debugJson:
-		print ("json : " + json.dumps(r.json (), indent = 4))
+		print ("body: " + json.dumps(r.json (), indent = 4))
 	else:
 		print()
 	
 ########################################### ###########################################
-# post with files 
 
+def getTasksProgress(uuid):
+	url = host+'/print/tasks/' + uuid
+	r = requests.get(url)
+	if 'progress' in r.json():
+		progress = r.json()['progress']
+		print('progress : ' + str(progress))
+		return progress 
+	else:
+		print ("can't get progress")
+		return -1
+
+########################################### ###########################################
+
+def printTasksProgress(uuid, delay, tryTime):
+	for i in range(tryTime):
+		progress = getTasksProgress(uuid)
+		if progress == 1:
+			break
+		else:
+			sleep(delay)
+
+########################################### ###########################################
+# post with files 
 
 def uploadFile(fileName):
 	url = host+'/files/upload'
@@ -44,25 +66,10 @@ def importMesh (file_id):
 
 ########################################### ###########################################
 
+
 def importMeshResponse(uuid):
-	url = host+'/print/tasks/'+uuid
-	r = requests.get(url)
-	print ("status code : " + str(r.status_code))
-	print('progress : ' + str(r.json()['progress']))
-	tryTime = 1
-	while r.json()['status'] != 'done':
-		time.sleep(1)	# sleep 1s and try again
-		r = requests.get(url)
-		print('progress : ' + str(r.json()['progress']))
-		tryTime += 1
-		if tryTime > 60:	# timeout process
-			print('timeout')
-			uuid = 'timeout'
-			break
-		
-	resJsonPrint(r)
-	uuid = str(r.json ()['result']['id'])
-	return uuid
+	printTasksProgress(uuid, 1, 60)
+	return getTasksResult(uuid, 'id')
 
 ########################################### ###########################################
 
@@ -90,7 +97,7 @@ def analyzeMesh(uuid):
 	tryTime = 1
 	# while r.json()['status'] != 'done':
 	while 'progress' in r.json():
-		time.sleep(1)   # sleep 1s and try again
+		sleep(1)   # sleep 1s and try again
 		r = requests.post(url, data = args)
 		#print ("status code : " + str(r.status_code))
 		if 'progress' in r.json():
@@ -119,7 +126,7 @@ def reqairMesh(uuid):
 	tryTime = 1
 	# while r.json()['status'] != 'done':
 	while 'progress' in r.json():
-		time.sleep(1)   # sleep 1s and try again
+		sleep(1)   # sleep 1s and try again
 		r = requests.post(url, data = args)
 		#print ("status code : " + str(r.status_code))
 		if 'progress' in r.json():
@@ -156,26 +163,8 @@ def createTray(printer_id, profile_id, mesh_ids):
 ########################################### ###########################################
 
 def createTrayResponse(uuid):
-	url = host+'/print/tasks/' + uuid
-	r = requests.get(url)
-	print ("status code : " + str(r.status_code))
-	tryTime = 1
-	while r.json()['status'] != 'done':
-		time.sleep(1)
-		r = requests.get(url)
-		print ("status code : " + str(r.status_code))
-		if 'progress' in r.json():
-			print('progress : ' + str(r.json()['progress']))
-		tryTime += 1
-		if tryTime > 60:
-			print('timeout')
-			uuid = 'timeout'
-			break
-	resJsonPrint(r)
-	uuid = r.json ()['result']['id']
-	# uuid = r.json ()['id']
-	return uuid
-
+	printTasksProgress(uuid, 1, 60)
+	return getTasksResult(uuid, 'id')
 
 ########################################### ###########################################
 
@@ -205,31 +194,16 @@ def prepareTrayProgress(uuid):
 		return 0
 ########################################### ###########################################
 def prepareTrayResponse (uuid):
-	url = host+'/print/tasks/' + uuid
-	r = requests.get(url)
-	resJsonPrint(r)
-	tryTime = 1
-	while r.json()['status'] != 'done':
-		time.sleep(1)
-		r = requests.get(url)
-		if 'progress' in r.json():
-			print('progress : ' + str(r.json()['progress']))
-		tryTime += 1
-		if tryTime > 60:
-			print('timeout')
-			# uuid = 'timeout'
-			break
-	resJsonPrint(r)
-	tryTime = 1
-	uuid = r.json()['result']['id']
-	return uuid
+	printTasksProgress(uuid, 1, 60*10)
+	return getTasksResult(uuid, 'id')
 
 ########################################### ###########################################
 # generate Gcode file
 
 def generateGcode(uuid):
 	url = host+'/print/trays/generate-printable'
-	args = {'id': uuid, 'generate_raw': True}
+	# args = {'id': uuid, 'generate_raw': False}
+	args = {'id': uuid}
 	print ('args = ' + str(args))
 	r = requests.post(url, data = args)
 	print ("status code : " + str(r.status_code))
@@ -240,39 +214,24 @@ def generateGcode(uuid):
 
 ########################################### ###########################################
 def generateGcodeProgress(uuid):
-	url = host+'/print/tasks/' + uuid
-	r = requests.get(url)
-	if 'progress' in r.json():
-		progress = r.json()['progress']
-		print('progress : %s' %progress)
-		return progress
-	else:
-		return 0
+	return getTasksProgress(uuid)
 
 		
 
 
 ########################################### ###########################################
-
-def generateGcodeResponse(uuid):
+def getTasksResult(uuid, target):
 	url = host+'/print/tasks/' + uuid
 	r = requests.get(url)
 	resJsonPrint(r)
-	tryTime = 1
-	while r.json()['status'] != 'done':
-		time.sleep(2)
-		r = requests.get(url)
-		if 'progress' in r.json():
-			print('progress : ' + str(r.json()['progress']))
-		tryTime += 1
-		if tryTime > 60:
-			print('timeout')
-			uuid = 'timeout'
-			break
-	resJsonPrint(r)
-	tryTime = 1
-	uuid = r.json()['result']['file_id']
-	return uuid
+	if 'result' in r.json() and target in r.json()['result']:
+		return r.json()['result'][target]
+
+########################################### ###########################################
+
+def generateGcodeResponse(uuid):
+	printTasksProgress(uuid, 1, 60*10)
+	return getTasksResult(uuid, 'file_id')
 
 ########################################### ###########################################
 
