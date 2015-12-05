@@ -10,7 +10,7 @@
 
 	./run.sh
 
-运行命令行程序:
+运行图形界面程序(app+console):
 
 	./rungui.sh
 
