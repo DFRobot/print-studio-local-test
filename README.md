@@ -9,8 +9,10 @@
 运行命令行程序:
 
 	./run.sh
-	#or
-	python ./main.py 
+
+运行命令行程序:
+
+	./rungui.sh
 
 构建OSX APP:
 
