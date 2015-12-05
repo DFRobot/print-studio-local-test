@@ -1,11 +1,9 @@
-request python3, requests
+需要安装python3以及requests模块
 
-1.pip3 requests
+	pip3 requests
+	./run.sh
 
-2./run.sh
+	python ./main.py 
 
-or for console
-3.python ./main.py 
-
-or for gui with console
-4.python ./app.py 
+	or for gui with console
+	python ./app.py 
