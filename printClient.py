@@ -202,8 +202,8 @@ def prepareTrayResponse (uuid):
 
 def generateGcode(uuid):
 	url = host+'/print/trays/generate-printable'
-	# args = {'id': uuid, 'generate_raw': False}
-	args = {'id': uuid}
+	args = {'id': uuid, 'generate_raw': True}
+	# args = {'id': uuid}
 	print ('args = ' + str(args))
 	r = requests.post(url, data = args)
 	print ("status code : " + str(r.status_code))
