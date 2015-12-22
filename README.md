@@ -4,13 +4,13 @@
 
 安装requests:
 
-	pip3 requests
+	pip3 install requests
 
 运行命令行程序:
 
 	./run.sh
 
-运行图形界面程序(app+console):
+运行图形界面程序(app+terminal):
 
 	./rungui.sh
 
